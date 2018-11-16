@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2 class="text-center">Введите данные</h2>
+<div class="row">
+    <div class="col-md-offset-3 col-md-6 col-xs-12">
+        @using (Html.BeginForm("Check", "Home", FormMethod.Get, new { id = "MainForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("weight", null, new { @id="weightHidden" })
+            @Html.Hidden("growth", null, new { @id = "growthHidden" })
+            @Html.Hidden("age", null, new { @id = "ageHidden" })
+            @Html.Hidden("vision", null, new { @id = "visionHidden" })
+            <div class="form-horizontal">
+                <hr />
+                <div class="form-group">
+                    @Html.Label("Имя: ", htmlAttributes: new { @class = "control-label col-md-5 text-right" })
+                    <div class="col-md-7" style="padding-top:13px;">
+                        <input type="text" style="width: 400px" onclick="newValid(this)" class="form-control" name="Name" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-5 col-md-7">
+                            <span class="validation" style="color: red; font-size: 12px;">Имя не может быть пустым</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Вес: ", htmlAttributes: new { @class = "control-label col-md-5 text-right" })
+                    <div class="col-md-7" style="padding-top:13px;">
+                        <select id="WeightSelect" style="width: 400px">
+                            @for (int i = 1; i < 800; i++)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Рост: ", htmlAttributes: new { @class = "control-label col-md-5 text-right" })
+                    <div class="col-md-7" style="padding-top:13px;">
+                        <select id="GrowthSelect" style="width: 400px">
+                            @for (int i = 1; i < 300; i++)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Возраст: ", htmlAttributes: new { @class = "control-label col-md-5 text-right" })
+                    <div class="col-md-7" style="padding-top:13px;">
+                        <select id="AgeSelect" style="width: 400px">
+                            @for (int i = 1; i < 150; i++)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Зрение: ", htmlAttributes: new { @class = "control-label col-md-5 text-right" })
+                    <div class="col-md-7" style="padding-top:13px;">
+                        <select id="VisionSelect" style="width: 400px">
+                            @for (double i = 0; i < 1.05; i = i + 0.05)
+                            {
+                                <option>@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.Label("Вредные привычки и болезни: ", htmlAttributes: new { @class = "control-label col-md-5 text-right" })
+                    <div class="col-md-7" style="padding-top:13px;">
+                        <input type="text" style="width: 400px" class="form-control" name="Med" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-offset-5 col-md-7">
+                            <span class="validation" style="color: red; font-size: 12px;">Перечисляйте элементы списка через пробел</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-7">
+                        <input type="button" value="Протестировать" onclick="Check()" style="width: 400px" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.validation').hide();
+    });
+
+    function newValid(el) {
+        $(el).css('border-color', '#66afe9');
+        $('.validation').hide();
+    };
+
+    function Check() {
+        var name = $('input[name="Name"]').val();
+        var weight = $("#WeightSelect option:selected").text();
+        var growth = $("#GrowthSelect option:selected").text();
+        var age = $("#AgeSelect option:selected").text();
+        var vision = $("#VisionSelect option:selected").text();
+        var med = $('input[name="Med"]').val();
+
+        if (name != '' && med.indexOf(',') == -1) {
+            $('#weightHidden').val(weight);
+            $('#growthHidden').val(growth);
+            $('#ageHidden').val(age);
+            $('#visionHidden').val(vision);
+            $('#MainForm').submit();
+        }
+        else {
+            if (name == '') {
+                $('input[name="Name"]').css("border-color", "red");
+                $('input[name="Name"]').parent().parent().find('.validation').show();
+            }
+            if (med.indexOf(' ') == -1) {
+                $('input[name="Med"]').css("border-color", "red");
+                $('input[name="Med"]').parent().parent().find('.validation').show();
+            }
+        }
+    };
+
+</script>
